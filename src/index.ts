@@ -3,10 +3,10 @@ import { getPropertyBySelector, setUpNewPage } from 'puppeteer-helpers';
 
 
 // Whatever search param you can to use
-const searchParam = 'pasta makers';
+const searchParam = 'pet food';
 
 // How many pages of results to go through
-const numberOfPagesToSearch = 1;
+const numberOfPagesToSearch = 3;
 
 // Do we want to compete on products that Amazon sell?
 const wantSoldByAmazon = false;
@@ -53,24 +53,27 @@ const minimumPrice = 25;
                     try {
                         const detailsObject = await goToDetailsPage(productOnPage, browser, minimumAllowedNumberOfVendors, wantSoldByAmazon);
                         if (detailsObject) {
-                            potentialProducts.push({
-                                name: name,
-                                price: price,
-                                numberOfVendors: detailsObject.numberOfVendors,
-                                buyboxVendor: detailsObject.buyboxVendor,
-                                brand: detailsObject.brand
-                            });
+                            // Let's not duplicate entries
+                            if (potentialProducts.filter(product => product.name === name).length === 0) {
+                                potentialProducts.push({
+                                    name: name,
+                                    price: price,
+                                    numberOfVendors: detailsObject.numberOfVendors,
+                                    buyboxVendor: detailsObject.buyboxVendor,
+                                    brand: detailsObject.brand,
+                                    url: detailsObject.url
+                                });
+                            }
                         }
                     }
                     catch (e) {
                         console.log('Error going to the details page', e);
                     }
                 }
-                console.log('potential Products', potentialProducts);
             }
-
-
         }
+        console.log('potential Products', potentialProducts);
+
         await page.close();
         await browser.close();
 
@@ -84,16 +87,25 @@ export async function goToDetailsPage(product: ElementHandle, browser: Browser, 
     const page = await setUpNewPage(browser);
     const url = await getPropertyBySelector(product, '.s-access-detail-page', 'href');
     await page.goto(url);
-    const buyboxVendor = (await getPropertyBySelector(page, '#merchant-info a', 'innerHTML')).trim();
+    let buyboxVendor = (await getPropertyBySelector(page, '#merchant-info a', 'innerHTML'));
+    if (buyboxVendor) {
+        buyboxVendor = buyboxVendor.trim();
+    };
     const brand = await getPropertyBySelector(page, '#bylineInfo', 'innerHTML');
     let numberOfVendors = await getPropertyBySelector(page, '#olp_feature_div a', 'innerHTML');
-    numberOfVendors = numberOfVendors.split('</b>')[1].trim();
-    numberOfVendors = numberOfVendors.split(')')[0];
-    numberOfVendors = numberOfVendors.split('(')[1].trim();
+    if (numberOfVendors) {
+        numberOfVendors = numberOfVendors.split('</b>')[1].trim();
+    }
+    if (numberOfVendors) {
+        numberOfVendors = numberOfVendors.split(')')[0];
+    }
+    if (numberOfVendors) {
+        numberOfVendors = numberOfVendors.split('(')[1].trim();
+    }
 
-    // If it's sold by Amazon the data parsed from buyboxVendor will be 'Details'
-    if ((!wantSoldByAmazon && buyboxVendor !== 'Details') && parseInt(numberOfVendors) >= minimumAllowedNumberOfVendors) {
-        const dataToReturn = { numberOfVendors: numberOfVendors, buyboxVendor: buyboxVendor, brand: brand };
+    // If it's sold by Amazon the data parsed from buyboxVendor will be 'Details', 'easy-to-open packaging', or null
+    if ((!wantSoldByAmazon && buyboxVendor && (buyboxVendor !== 'Details' || buyboxVendor !== 'easy-to-open packaging')) && parseInt(numberOfVendors) >= minimumAllowedNumberOfVendors) {
+        const dataToReturn = { numberOfVendors: numberOfVendors, buyboxVendor: buyboxVendor, brand: brand, url: url };
         await page.close();
 
         return Promise.resolve(dataToReturn);
