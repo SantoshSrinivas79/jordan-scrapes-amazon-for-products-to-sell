@@ -67,7 +67,6 @@ const minimumPrice = 25;
                     }
                 }
                 console.log('potential Products', potentialProducts);
-                // process.exit();
             }
 
 
@@ -91,7 +90,6 @@ export async function goToDetailsPage(product: ElementHandle, browser: Browser, 
     numberOfVendors = numberOfVendors.split('</b>')[1].trim();
     numberOfVendors = numberOfVendors.split(')')[0];
     numberOfVendors = numberOfVendors.split('(')[1].trim();
-    // console.log('details', buyboxVendor, numberOfVendors);
 
     // If it's sold by Amazon the data parsed from buyboxVendor will be 'Details'
     if ((!wantSoldByAmazon && buyboxVendor !== 'Details') && parseInt(numberOfVendors) >= minimumAllowedNumberOfVendors) {

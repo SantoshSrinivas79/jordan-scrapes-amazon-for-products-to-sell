@@ -6,6 +6,8 @@ Searches Amazon by keyword and finds potential products to sell based on certain
 
 Clone the repository, run `npm i`, and then `npm start` in a terminal/bash/command prompt.
 
+It will output an array of product objects with items like price, brand name, and total buybox vendors.
+
 You can adjust the criteria easily by adjusting the variables found at the top.
 
 There are script options to run this headless or on an ubuntu webserver.
