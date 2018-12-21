@@ -1,0 +1,36 @@
+{
+  "name": "jordan-scrapes-amazon-for-products",
+  "version": "1.0.0",
+  "description": "Using puppeteer, we web scrape Amazon to find a suitable product to sell.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "tsc && node ./dist/index.js",
+    "start:ubuntu": "tsc && node ./dist/index.js ubuntu",
+    "start:headless": "tsc && node ./dist/index.js headless"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aarmora/jordan-scrapes-amazon-for-products-to-sell.git"
+  },
+  "keywords": [
+    "Javascript",
+    "web",
+    "scraping",
+    "puppeteer",
+    "amazon"
+  ],
+  "author": "Jordan Hansen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aarmora/jordan-scrapes-amazon-for-products-to-sell/issues"
+  },
+  "homepage": "https://github.com/aarmora/jordan-scrapes-amazon-for-products-to-sell#readme",
+  "dependencies": {
+    "puppeteer": "^1.11.0",
+    "puppeteer-helpers": "^1.0.10",
+    "typescript": "^3.2.2"
+  },
+  "devDependencies": {
+    "@types/puppeteer": "^1.11.1"
+  }
+}
