@@ -4,7 +4,7 @@ Searches Amazon by keyword and finds potential products to sell based on certain
 
 ## Getting Started
 
-Clone the repository, run `npm i`, and then `npm start`.
+Clone the repository, run `npm i`, and then `npm start` in a terminal/bash/command prompt.
 
 You can adjust the criteria easily by adjusting the variables found at the top.
 
@@ -27,7 +27,7 @@ Tested on Node v8.11.2 and NPM v5.6.0.
 
 ### Installing
 
-All you need to do is an install.
+After installing [NodeJS](https://nodejs.org/en/) you should be able to just run the following in the terminal.
 
 ```
 npm i
