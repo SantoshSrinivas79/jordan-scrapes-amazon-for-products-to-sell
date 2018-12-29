@@ -23,6 +23,8 @@ To run headless:
 npm run start:headless
 ```
 
+[Full Guide](https://javascriptwebscrapingguy.com/blog/jordan-scrapes-amazon-looking-for-products-to-sell/)
+
 ### Prerequisites
 
 Tested on Node v8.11.2 and NPM v5.6.0.
