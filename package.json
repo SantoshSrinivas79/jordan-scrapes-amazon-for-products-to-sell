@@ -4,9 +4,13 @@
   "description": "Using puppeteer, we web scrape Amazon to find a suitable product to sell.",
   "main": "./dist/index.js",
   "scripts": {
-    "start": "tsc && node ./dist/index.js",
+    "start": "npm i && tsc && node ./dist/index.js",
+    "start:noInstall": "tsc && node ./dist/index.js",
     "start:ubuntu": "tsc && node ./dist/index.js ubuntu",
-    "start:headless": "tsc && node ./dist/index.js headless"
+    "start:headless": "tsc && node ./dist/index.js headless",
+    "massSearch": "tsc && node ./dist/massSearch.js",
+    "massSearch:ubuntu": "tsc && node ./dist/massSearch.js ubuntu",
+    "massSearch:headless": "tsc && node ./dist/massSearch.js headless"
   },
   "repository": {
     "type": "git",
@@ -28,7 +32,9 @@
   "dependencies": {
     "puppeteer": "^1.11.0",
     "puppeteer-helpers": "^1.0.10",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "database-helpers": "2.0.2",
+    "webhook-discord": "^2.3.0"
   },
   "devDependencies": {
     "@types/puppeteer": "^1.11.1"
