@@ -32,9 +32,15 @@ const webHookHame = 'Amazon Product Scraper';
             // Check if it already exists
             if (products.length > 0) {
                 try {
-                    await dbHelpers.insertToMongo(db, config.mongoCollection, products);
-                    // Notify success via webhook
-                    await hook.success(webHookHame, `Inserted ${products.length} products from ${category}`);
+                    for (let product of products) {
+                        const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, {asin: product.asin});
+                        if (matches.length < 0) {
+                            await dbHelpers.insertToMongo(db, config.mongoCollection, product);
+                            // Notify success via webhook
+                            await hook.success(webHookHame, `Inserted ${products.length} products from ${category}`);
+                        }
+                    }
+
                 }
                 catch (e) {
                     console.log('Unexpected error', e);

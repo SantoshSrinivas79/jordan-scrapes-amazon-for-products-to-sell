@@ -1,5 +1,5 @@
 import puppeteer, { Browser } from 'puppeteer';
-import { getPropertyBySelector, setUpNewPage } from 'puppeteer-helpers';
+import { getPropertyBySelector, setUpNewPage, getPropertyByHandle } from 'puppeteer-helpers';
 import { scrapeDetailsPage } from './detailsPage';
 
 export async function scrapeResults(searchParam: string, numberOfPagesToSearch: number, wantSoldByAmazon: boolean, minimumAllowedNumberOfVendors: number, minimumPrice: number) {
@@ -38,6 +38,8 @@ export async function scrapeResults(searchParam: string, numberOfPagesToSearch: 
                     try {
                         const detailsObject = await scrapeDetailsPage(productOnPage, browser, minimumAllowedNumberOfVendors, wantSoldByAmazon);
                         if (detailsObject) {
+                            const currentDate = new Date();
+                            const asin = detailsObject.url.split('/dp/')[1].split('/')[0];
                             // Let's not duplicate entries
                             if (potentialProducts.filter(product => product.name === name).length === 0) {
                                 potentialProducts.push({
@@ -46,7 +48,10 @@ export async function scrapeResults(searchParam: string, numberOfPagesToSearch: 
                                     numberOfVendors: detailsObject.numberOfVendors,
                                     buyboxVendor: detailsObject.buyboxVendor,
                                     brand: detailsObject.brand,
-                                    url: detailsObject.url
+                                    url: detailsObject.url, 
+                                    asin: asin,
+                                    createdAt: currentDate, 
+                                    updatedAt: currentDate
                                 });
                             }
                         }
