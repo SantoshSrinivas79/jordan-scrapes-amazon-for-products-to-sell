@@ -1,7 +1,7 @@
 import { scrapeResults } from './resultsPage';
 
 // Whatever search param you can to use
-const searchParam = 'bird food';
+const searchParam = 'Baby+Safety';
 
 // How many pages of results to go through
 const numberOfPagesToSearch = 2;
