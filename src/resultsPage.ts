@@ -4,21 +4,8 @@ import { scrapeDetailsPage } from './detailsPage';
 
 export async function scrapeResults(searchParam: string, numberOfPagesToSearch: number, wantSoldByAmazon: boolean, minimumAllowedNumberOfVendors: number, minimumPrice: number) {
     try {
-        let browser: Browser;
-        let ubuntu = false;
-        let headless = false;
-        if (process.argv[2] === 'ubuntu' || process.argv[3] === 'ubuntu') {
-            ubuntu = true;
-        }
-        if (process.argv[2] === 'headless' || process.argv[3] === 'headless') {
-            headless = true;
-        }
-        if (ubuntu) {
-            browser = await puppeteer.launch({ headless: true, args: [`--window-size=${1800},${1200}`, '--no-sandbox', '--disable-setuid-sandbox'] });
-        }
-        else {
-            browser = await puppeteer.launch({ headless: headless, args: [`--window-size=${1800},${1200}`] });
-        }
+        let browser: Browser = await setUpBrowser();      
+        let page = await setUpNewPage(browser);
 
         const baseUrl = 'https://www.amazon.com/s?field-keywords=';
         const url = baseUrl + searchParam;
@@ -26,9 +13,8 @@ export async function scrapeResults(searchParam: string, numberOfPagesToSearch: 
         const potentialProducts: any = [];
 
 
-        const page = await setUpNewPage(browser);
         let categoryError = 0;
-        for (let i = 1; i < numberOfPagesToSearch + 1; i++) {
+        for (let i = 1; i < numberOfPagesToSearch + 1; i++) {  
             await page.goto(`${url}&page=${i}`);
             let productsOnPage = await page.$$('.s-result-item');
             const resultsCol = await getPropertyBySelector(page, '#resultsCol', 'innerHTML');
@@ -38,7 +24,11 @@ export async function scrapeResults(searchParam: string, numberOfPagesToSearch: 
                 if (categoryError > 4) {
                     return Promise.reject('Category not resolving. Skipping');
                 }
+                await page.close();
+                await browser.close();
                 await timeout(3000);
+                browser = await setUpBrowser();
+                page = await setUpNewPage(browser);
                 continue;
             }
 
@@ -94,4 +84,24 @@ export async function scrapeResults(searchParam: string, numberOfPagesToSearch: 
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function setUpBrowser() {
+        let browser: Browser;
+        let ubuntu = false;
+        let headless = false;
+        if (process.argv[2] === 'ubuntu' || process.argv[3] === 'ubuntu') {
+            ubuntu = true;
+        }
+        if (process.argv[2] === 'headless' || process.argv[3] === 'headless') {
+            headless = true;
+        }
+        if (ubuntu) {
+            browser = await puppeteer.launch({ headless: true, args: [`--window-size=${1800},${1200}`, '--no-sandbox', '--disable-setuid-sandbox'] });
+        }
+        else {
+            browser = await puppeteer.launch({ headless: headless, args: [`--window-size=${1800},${1200}`] });
+        }
+
+        return Promise.resolve(browser);
 }
