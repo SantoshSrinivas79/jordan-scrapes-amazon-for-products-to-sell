@@ -27,19 +27,36 @@ export async function scrapeResults(searchParam: string, numberOfPagesToSearch: 
 
 
         const page = await setUpNewPage(browser);
+        let categoryError = 0;
         for (let i = 1; i < numberOfPagesToSearch + 1; i++) {
             await page.goto(`${url}&page=${i}`);
             let productsOnPage = await page.$$('.s-result-item');
+            const resultsCol = await getPropertyBySelector(page, '#resultsCol', 'innerHTML');
+            if (!resultsCol) {
+                i--;
+                categoryError++;
+                if (categoryError > 4) {
+                    return Promise.reject('Category not resolving. Skipping');
+                }
+                await timeout(3000);
+                continue;
+            }
+
+            console.log('productsOnPage length', productsOnPage.length, `${url}&page=${i}`);
 
             for (let productOnPage of productsOnPage) {
                 const name = await getPropertyBySelector(productOnPage, 'img', 'alt');
                 const price = await getPropertyBySelector(productOnPage, '.sx-price-whole', 'innerHTML');
+                console.log('name and price', name, price);
                 if (name && name !== '' && parseInt(price) > minimumPrice) {
                     try {
                         const detailsObject = await scrapeDetailsPage(productOnPage, browser, minimumAllowedNumberOfVendors, wantSoldByAmazon);
                         if (detailsObject) {
                             const currentDate = new Date();
-                            const asin = detailsObject.url.split('/dp/')[1].split('/')[0];
+                            let asin = detailsObject.url.split('/dp/')[1];
+                            if (asin) {
+                                asin = asin.split('/')[0];
+                            }
                             // Let's not duplicate entries
                             if (potentialProducts.filter(product => product.name === name).length === 0) {
                                 potentialProducts.push({
@@ -73,4 +90,8 @@ export async function scrapeResults(searchParam: string, numberOfPagesToSearch: 
     catch (e) {
         return Promise.reject(`Something went wrong in the initial set up: ${e}`);
     }
+}
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

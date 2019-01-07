@@ -5,7 +5,7 @@ import * as dbHelpers from 'database-helpers';
 import { config } from './config';
 
 // How many pages of results to go through
-const numberOfPagesToSearch = 1;
+const numberOfPagesToSearch = 10;
 
 // Do we want to compete on products that Amazon sell?
 const wantSoldByAmazon = false;
@@ -22,7 +22,7 @@ const webHookHame = 'Amazon Product Scraper';
     const dbUrl = `mongodb://${config.mongoUser}:${config.mongoPass}@${config.mongoUrl}/${config.mongoDb}`;
     const db = await dbHelpers.initializeMongo(dbUrl);
     const hook = new Webhook('https://discordapp.com/api/webhooks/531203290755760148/zvp_lglHNldw2l6Qj9mrdA9bwMpiuttCPg-S777JM9qsLtDxomYrcx6CN_aEMdYlLGVc');
-    const sampleCategories = getRandom(categories, 20);
+    const sampleCategories = getRandom(categories, 100);
     for (let category of sampleCategories) {
         try {
             const products = await scrapeResults(category, numberOfPagesToSearch, wantSoldByAmazon, minimumAllowedNumberOfVendors, minimumPrice);
@@ -33,11 +33,17 @@ const webHookHame = 'Amazon Product Scraper';
             if (products.length > 0) {
                 try {
                     for (let product of products) {
-                        const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, {asin: product.asin});
-                        if (matches.length < 0) {
-                            await dbHelpers.insertToMongo(db, config.mongoCollection, product);
-                            // Notify success via webhook
-                            await hook.success(webHookHame, `Inserted ${products.length} products from ${category}`);
+                        try {
+                            const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, { asin: product.asin });
+                            if (matches.length < 1) {
+                                await dbHelpers.insertToMongo(db, config.mongoCollection, product);
+                                // Notify success via webhook
+                                await hook.success(webHookHame, `Inserted ${products.length} products from ${category}`);
+                            }
+                        }
+                        catch (e) {
+                            console.log(e);
+                            await hook.info(webHookHame, `Unexpected error - ${e}`);
                         }
                     }
 
