@@ -32,30 +32,31 @@ const webHookHame = 'Amazon Product Scraper';
 
             // Insert to database
             // Check if it already exists
-            // if (products.length > 0) {
-            //     try {
-            //         for (let i = 0; i < products.length; i++) {
-            //             const product = products[i];
-            //             try {
-            //                 const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, { asin: product.asin });
-            //                 if (matches.length < 1) {
-            //                     await dbHelpers.insertToMongo(db, config.mongoCollection, product);
-            //                     // Notify success via webhook
-            //                     await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
-            //                 }
-            //             }
-            //             catch (e) {
-            //                 console.log(e);
-            //                 await hook.info(webHookHame, `Unexpected error - ${e}`);
-            //             }
-            //         }
+            if (products.length > 0) {
+                try {
+                    for (let i = 0; i < products.length; i++) {
+                        const product = products[i];
+                        try {
+                            const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, { asin: product.asin });
+                            if (matches.length < 1) {
+                                const insertResponse = await dbHelpers.insertToMongo(db, config.mongoCollection, product);
+                                console.log('insert response', insertResponse);
+                                // Notify success via webhook
+                                await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
+                            }
+                        }
+                        catch (e) {
+                            console.log(e);
+                            await hook.info(webHookHame, `Unexpected error - ${e}`);
+                        }
+                    }
 
-            //     }
-            //     catch (e) {
-            //         console.log('Unexpected error', e);
-            //         await hook.info(webHookHame, `Unexpected error - ${e}`);
-            //     }
-            // }
+                }
+                catch (e) {
+                    console.log('Unexpected error', e);
+                    await hook.info(webHookHame, `Unexpected error - ${e}`);
+                }
+            }
         }
         catch (e) {
             // Notify via webhook
