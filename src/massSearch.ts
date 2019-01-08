@@ -5,7 +5,7 @@ import * as dbHelpers from 'database-helpers';
 import { config } from './config';
 
 // How many pages of results to go through
-const numberOfPagesToSearch = 10;
+const numberOfPagesToSearch = 1;
 
 // Do we want to compete on products that Amazon sell?
 const wantSoldByAmazon = false;
@@ -25,6 +25,7 @@ const webHookHame = 'Amazon Product Scraper';
     const sampleCategories = getRandom(categories, 100);
     for (let [index, category] of sampleCategories.entries()) {
         try {
+            console.log('sample categories', index, category);
             const products = await scrapeResults(category, numberOfPagesToSearch, wantSoldByAmazon, minimumAllowedNumberOfVendors, minimumPrice);
             console.log('Products', products.length, category, sampleCategories.length, index);
 
@@ -38,7 +39,7 @@ const webHookHame = 'Amazon Product Scraper';
                             if (matches.length < 1) {
                                 await dbHelpers.insertToMongo(db, config.mongoCollection, product);
                                 // Notify success via webhook
-                                await hook.success(webHookHame, `Inserted ${product} from ${category}. Category #${index} of ${sampleCategories.length}`);
+                                await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
                             }
                         }
                         catch (e) {
