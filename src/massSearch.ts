@@ -22,11 +22,11 @@ const webHookHame = 'Amazon Product Scraper';
     const dbUrl = `mongodb://${config.mongoUser}:${config.mongoPass}@${config.mongoUrl}/${config.mongoDb}`;
     const db = await dbHelpers.initializeMongo(dbUrl);
     const hook = new Webhook('https://discordapp.com/api/webhooks/531203290755760148/zvp_lglHNldw2l6Qj9mrdA9bwMpiuttCPg-S777JM9qsLtDxomYrcx6CN_aEMdYlLGVc');
-    const sampleCategories = getRandom(categories, 10);
-    for (let category of sampleCategories) {
+    const sampleCategories = getRandom(categories, 100);
+    for (let [index, category] of sampleCategories.entries()) {
         try {
             const products = await scrapeResults(category, numberOfPagesToSearch, wantSoldByAmazon, minimumAllowedNumberOfVendors, minimumPrice);
-            console.log('Products', products, category);
+            console.log('Products', products.length, category, sampleCategories.length, index);
 
             // Insert to database
             // Check if it already exists
@@ -38,7 +38,7 @@ const webHookHame = 'Amazon Product Scraper';
                             if (matches.length < 1) {
                                 await dbHelpers.insertToMongo(db, config.mongoCollection, product);
                                 // Notify success via webhook
-                                await hook.success(webHookHame, `Inserted ${products.length} products from ${category}`);
+                                await hook.success(webHookHame, `Inserted ${product} from ${category}. Category #${index} of ${sampleCategories.length}`);
                             }
                         }
                         catch (e) {
