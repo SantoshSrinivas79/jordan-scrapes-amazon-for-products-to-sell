@@ -5,7 +5,7 @@ import * as dbHelpers from 'database-helpers';
 import { config } from './config';
 
 // How many pages of results to go through
-const numberOfPagesToSearch = 1;
+const numberOfPagesToSearch = 10;
 
 // Do we want to compete on products that Amazon sell?
 const wantSoldByAmazon = false;
