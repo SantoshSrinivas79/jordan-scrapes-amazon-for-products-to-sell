@@ -34,7 +34,8 @@ const webHookHame = 'Amazon Product Scraper';
             // Check if it already exists
             if (products.length > 0) {
                 try {
-                    for (let product of products) {
+                    for (let i = 0; i < products.length; i++) {
+                        const product = products[i];
                         try {
                             const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, { asin: product.asin });
                             if (matches.length < 1) {
