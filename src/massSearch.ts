@@ -23,7 +23,8 @@ const webHookHame = 'Amazon Product Scraper';
     const db = await dbHelpers.initializeMongo(dbUrl);
     const hook = new Webhook('https://discordapp.com/api/webhooks/531203290755760148/zvp_lglHNldw2l6Qj9mrdA9bwMpiuttCPg-S777JM9qsLtDxomYrcx6CN_aEMdYlLGVc');
     const sampleCategories = getRandom(categories, 100);
-    for (let [index, category] of sampleCategories.entries()) {
+    for (let index = 0; index < sampleCategories.length; index++) {
+        const category = sampleCategories[index];
         try {
             console.log('sample categories', index, category);
             const products = await scrapeResults(category, numberOfPagesToSearch, wantSoldByAmazon, minimumAllowedNumberOfVendors, minimumPrice);
