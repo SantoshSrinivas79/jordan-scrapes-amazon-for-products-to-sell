@@ -97,7 +97,15 @@ async function setUpBrowser() {
             headless = true;
         }
         if (ubuntu) {
-            browser = await puppeteer.launch({ headless: true, args: [`--window-size=${1800},${1200}`, '--no-sandbox', '--disable-setuid-sandbox'] });
+            browser = await puppeteer.launch({ headless: true, ignoreHTTPSErrors: true, args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-infobars',
+                '--window-position=0,0',
+                '--ignore-certifcate-errors',
+                '--ignore-certifcate-errors-spki-list',
+                '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
+            ] });
         }
         else {
             browser = await puppeteer.launch({ headless: headless, args: [`--window-size=${1800},${1200}`] });
