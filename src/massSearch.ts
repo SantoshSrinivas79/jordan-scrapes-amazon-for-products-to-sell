@@ -39,14 +39,14 @@ const webHookHame = 'Amazon Product Scraper';
                         try {
                             const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, { asin: product.asin });
                             if (matches.length < 1) {
-                                const insertResponse = await dbHelpers.insertToMongo(db, config.mongoCollection, product);
+                                await dbHelpers.insertToMongo(db, config.mongoCollection, product);
                                 // Notify success via webhook
-                                try {
-                                    await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
-                                }
-                                catch (e) {
-                                    console.log('Error in sending the webhook: ', e);
-                                } 
+                                // try {
+                                //     await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
+                                // }
+                                // catch (e) {
+                                //     console.log('Error in sending the webhook: ', e);
+                                // } 
                             }
                         }
                         catch (e) {
