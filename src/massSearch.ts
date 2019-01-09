@@ -42,7 +42,8 @@ const webHookHame = 'Amazon Product Scraper';
                                 // const insertResponse = await dbHelpers.insertToMongo(db, config.mongoCollection, product);
                                 // console.log('insert response', insertResponse);
                                 // Notify success via webhook
-                                await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
+                                // await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
+                                console.log('insert here ****e');
                             }
                         }
                         catch (e) {
