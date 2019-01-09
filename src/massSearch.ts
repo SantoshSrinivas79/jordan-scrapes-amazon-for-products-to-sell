@@ -39,11 +39,9 @@ const webHookHame = 'Amazon Product Scraper';
                         try {
                             const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, { asin: product.asin });
                             if (matches.length < 1) {
-                                // const insertResponse = await dbHelpers.insertToMongo(db, config.mongoCollection, product);
-                                // console.log('insert response', insertResponse);
+                                const insertResponse = await dbHelpers.insertToMongo(db, config.mongoCollection, product);
                                 // Notify success via webhook
-                                // await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
-                                console.log('insert here ****e');
+                                await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
                             }
                         }
                         catch (e) {
