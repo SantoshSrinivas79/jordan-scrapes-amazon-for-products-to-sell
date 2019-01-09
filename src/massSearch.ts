@@ -41,7 +41,12 @@ const webHookHame = 'Amazon Product Scraper';
                             if (matches.length < 1) {
                                 const insertResponse = await dbHelpers.insertToMongo(db, config.mongoCollection, product);
                                 // Notify success via webhook
-                                await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
+                                try {
+                                    await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
+                                }
+                                catch (e) {
+                                    console.log('Error in sending the webhook: ', e);
+                                } 
                             }
                         }
                         catch (e) {
