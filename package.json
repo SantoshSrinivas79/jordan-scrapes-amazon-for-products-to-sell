@@ -34,7 +34,7 @@
     "puppeteer-helpers": "^1.0.10",
     "typescript": "^3.2.2",
     "database-helpers": "2.0.2",
-    "webhook-discord": "^2.3.0"
+    "webhook-discord": "3.0.3"
   },
   "devDependencies": {
     "@types/puppeteer": "^1.11.1"

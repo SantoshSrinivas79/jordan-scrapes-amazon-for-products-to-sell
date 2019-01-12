@@ -16,12 +16,12 @@ const minimumAllowedNumberOfVendors = 3;
 // ...minimum price
 const minimumPrice = 25;
 
-const webHookHame = 'Amazon Product Scraper';
+const webHookName = 'Amazon Product Scraper';
 
 (async () => {
     const dbUrl = `mongodb://${config.mongoUser}:${config.mongoPass}@${config.mongoUrl}/${config.mongoDb}`;
     const db = await dbHelpers.initializeMongo(dbUrl);
-    const hook = new Webhook('https://discordapp.com/api/webhooks/531203290755760148/zvp_lglHNldw2l6Qj9mrdA9bwMpiuttCPg-S777JM9qsLtDxomYrcx6CN_aEMdYlLGVc');
+    const hook = new Webhook.Webhook(config.webhookUrl);
     const sampleCategories = getRandom(categories, 100);
     for (let index = 0; index < sampleCategories.length; index++) {
         const category = sampleCategories[index];
@@ -40,32 +40,25 @@ const webHookHame = 'Amazon Product Scraper';
                             const matches = await dbHelpers.getAllFromMongo(db, config.mongoCollection, { asin: product.asin });
                             if (matches.length < 1) {
                                 await dbHelpers.insertToMongo(db, config.mongoCollection, product);
-                                // Notify success via webhook
-                                // try {
-                                //     await hook.success(webHookHame, `Inserted ${product.name} from ${category}. Category #${index} of ${sampleCategories.length}`);
-                                // }
-                                // catch (e) {
-                                //     console.log('Error in sending the webhook: ', e);
-                                // } 
                             }
                         }
                         catch (e) {
                             console.log(e);
-                            await hook.info(webHookHame, `Unexpected error - ${e}`);
+                            await hook.info(webHookName, `Unexpected error - ${e}`);
                         }
                     }
 
                 }
                 catch (e) {
                     console.log('Unexpected error', e);
-                    await hook.info(webHookHame, `Unexpected error - ${e}`);
+                    await hook.info(webHookName, `Unexpected error - ${e}`);
                 }
             }
         }
         catch (e) {
             // Notify via webhook
             console.log('An error has occurred: ', e);
-            await hook.info(webHookHame, `Unexpected error - ${e}`);
+            await hook.info(webHookName, `Unexpected error - ${e}`);
             process.exit
         }
     }
