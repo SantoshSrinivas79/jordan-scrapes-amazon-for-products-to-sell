@@ -65,7 +65,7 @@ const webHookName = 'Amazon Product Scraper';
     process.exit();
 })();
 
-function getRandom(arr, n) {
+function getRandomFromArray(arr, n) {
     let result = new Array(n),
         len = arr.length,
         taken = new Array(len);
