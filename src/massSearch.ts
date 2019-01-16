@@ -22,7 +22,7 @@ const webHookName = 'Amazon Product Scraper';
     const dbUrl = `mongodb://${config.mongoUser}:${config.mongoPass}@${config.mongoUrl}/${config.mongoDb}`;
     const db = await dbHelpers.initializeMongo(dbUrl);
     const hook = new Webhook.Webhook(config.webhookUrl);
-    const sampleCategories = getRandom(categories, 100);
+    const sampleCategories = getRandomFromArray(categories, 100);
     for (let index = 0; index < sampleCategories.length; index++) {
         const category = sampleCategories[index];
         try {
