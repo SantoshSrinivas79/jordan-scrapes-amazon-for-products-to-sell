@@ -17,13 +17,29 @@ To run on ubuntu:
 ```
 npm run start:ubuntu
 ```
+These dependences are also required:
+
+```
+sudo apt-get install libx11-xcb1 libxcomposite1 libXdamage1 libxi6 libxext6 libxtst6 libnss3 libcups2 libxss1 libxrandr2 libasound2 libpangocairo-1.0-0 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0
+```
+
 
 To run headless:
 ```
 npm run start:headless
 ```
 
-[Full Guide](https://javascriptwebscrapingguy.com/blog/jordan-scrapes-amazon-looking-for-products-to-sell/)
+You will also need to rename `src/sample-config.ts` to `src/config.ts`. This file has example database connections for a mongo connnection and a url for a discord webhook. Valid credentials aren't required unless you are mass searching.
+
+[Full Guide on Single Category Searching](https://javascriptwebscrapingguy.com/blog/jordan-scrapes-amazon-looking-for-products-to-sell/)
+
+## Mass search
+
+You can do a mass search of many categories using `npm run massSearch`. A valid mongo connection and webhook discord url will be required. Once these are in place, just run the script and it'll take care of the rest.
+
+I **strongly** recommend doing this on a webserver or I think it's very possible that your IP address will be blocked by Amazon.
+
+[Full Guide on Mass Category Searching](https://javascriptwebscrapingguy.com/jordan-mass-scrapes-amazon-for-potential-products-part-1-of-2/)
 
 ### Prerequisites
 
