@@ -1,6 +1,6 @@
 import { scrapeResults } from './resultsPage';
 import { categories } from './taxonomy';
-import Webhook from 'webhook-discord';
+import { hook, initializeMongo } from "./helpers";
 import * as dbHelpers from 'database-helpers';
 import { config } from './config';
 
@@ -19,9 +19,7 @@ const minimumPrice = 25;
 const webHookName = 'Amazon Product Scraper';
 
 (async () => {
-    const dbUrl = `mongodb://${config.mongoUser}:${config.mongoPass}@${config.mongoUrl}/${config.mongoDb}`;
-    const db = await dbHelpers.initializeMongo(dbUrl);
-    const hook = new Webhook.Webhook(config.webhookUrl);
+    const db = await initializeMongo();
     const sampleCategories = getRandomFromArray(categories, 100);
     for (let index = 0; index < sampleCategories.length; index++) {
         const category = sampleCategories[index];
@@ -59,7 +57,7 @@ const webHookName = 'Amazon Product Scraper';
             // Notify via webhook
             console.log('An error has occurred: ', e);
             await hook.info(webHookName, `Unexpected error - ${e}`);
-            process.exit
+            process.exit(1)
         }
     }
     process.exit();

@@ -33,6 +33,56 @@ You will also need to rename `src/sample-config.ts` to `src/config.ts`. This fil
 
 [Full Guide on Single Category Searching](https://javascriptwebscrapingguy.com/blog/jordan-scrapes-amazon-looking-for-products-to-sell/)
 
+## Docker
+
+First things first `cp src/config-docker.ts src/config.ts`.
+
+### Docker Start
+
+Launch everything needed by running `docker-compose up`. To launch everything in the background use `docker-compose up -d`.
+
+Docker compose will launch:
+
+* [mongo](https://hub.docker.com/_/mongo)
+* [mongo-express](https://hub.docker.com/_/mongo-express) view db at http://localhost:8081
+* [app (in node:11-alpine w/ puppeteer)](https://hub.docker.com/_/mongo-express)
+
+### Docker Stop
+
+if running in foreground, use `ctrl+c`, if running "detached" in the background:
+
+* `docker-compose stop` stop containers but don't delete any containers or data
+* to clean up, use `docker-compose down`
+
+```bash
+$ docker-compose down --help
+Stops containers and removes containers, networks, volumes, and images
+created by `up`.
+
+By default, the only things removed are:
+
+- Containers for services defined in the Compose file
+- Networks defined in the `networks` section of the Compose file
+- The default network, if one is used
+
+Networks and volumes defined as `external` are never removed.
+
+Usage: down [options]
+
+Options:
+    --rmi type              Remove images. Type must be one of:
+                              'all': Remove all images used by any service.
+                              'local': Remove only images that don't have a
+                              custom tag set by the `image` field.
+    -v, --volumes           Remove named volumes declared in the `volumes`
+                            section of the Compose file and anonymous volumes
+                            attached to containers.
+    --remove-orphans        Remove containers for services not defined in the
+                            Compose file
+    -t, --timeout TIMEOUT   Specify a shutdown timeout in seconds.
+                            (default: 10)
+```
+
 ## Mass search
 
 You can do a mass search of many categories using `npm run massSearch`. A valid mongo connection and webhook discord url will be required. Once these are in place, just run the script and it'll take care of the rest.

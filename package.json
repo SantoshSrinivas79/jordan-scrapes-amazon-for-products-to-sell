@@ -4,7 +4,10 @@
   "description": "Using puppeteer, we web scrape Amazon to find a suitable product to sell.",
   "main": "./dist/index.js",
   "scripts": {
-    "start": "npm i && tsc && node ./dist/index.js",
+    "build": "node node_modules/typescript/bin/tsc",
+    "watch": "node node_modules/typescript/bin/tsc --watch",
+    "prestart": "node node_modules/typescript/bin/tsc",
+    "start": "node ./dist/index.js",
     "start:noInstall": "tsc && node ./dist/index.js",
     "start:ubuntu": "tsc && node ./dist/index.js ubuntu",
     "start:headless": "tsc && node ./dist/index.js headless",
@@ -32,11 +35,13 @@
   "dependencies": {
     "puppeteer": "^1.11.0",
     "puppeteer-helpers": "^1.0.10",
-    "typescript": "^3.2.2",
     "database-helpers": "2.0.2",
     "webhook-discord": "3.0.3"
   },
   "devDependencies": {
-    "@types/puppeteer": "^1.11.1"
+    "@types/node": "^11.11.6",
+    "@types/puppeteer": "^1.11.1",
+    "tslint": "^5.14.0",
+    "typescript": "^3.2.2"
   }
 }
